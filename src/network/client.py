@@ -58,19 +58,16 @@ class Client():
         )
 
     def participate(self) -> int:
-        return self.safe_put("/play/zombidef/command/").json()["startsInSec"]
+        return self.safe_put("/play/zombidef/participate/").json()["startsInSec"]
 
     def get_units(self) -> Units:
         response = self.safe_get("/play/zombidef/units/")
-
         return Units.from_json(response.text)
 
     def research_world(self) -> World:
         response = self.safe_get("/play/zombidef/world/")
-
         return World.from_json(response.text)
 
     def get_rounds(self) -> Game:
         response = self.safe_get("/rounds/zombidef/")
-        print(response.text)
         return Game.from_json(response.text)
