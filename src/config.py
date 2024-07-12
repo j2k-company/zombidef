@@ -1,11 +1,14 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from enum import Enum
+from pygame import K_UP, K_LEFT, K_DOWN, K_RIGHT
 
-SCREEN_WIDTH = 500
-SCREEN_HEIGHT = 500
+SCREEN_WIDTH = 512
+SCREEN_HEIGHT = 512
 
 TILE = 32
 FPS = 60
+
+CAMERA_CONTROL = [K_UP, K_LEFT, K_DOWN, K_RIGHT]
 
 
 class Tiles(Enum):
