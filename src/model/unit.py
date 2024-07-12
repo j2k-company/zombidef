@@ -1,10 +1,13 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from typing import List
 
-from src.model.base import Coordinate
+from dataclasses_json import LetterCase, dataclass_json
+
+from src.model.base import Coordinate, datetime_metadata
 
 
+@dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class Base:
     attack: int
@@ -19,6 +22,7 @@ class Base:
     y: int
 
 
+@dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class Enemy:
     attack: int
@@ -30,16 +34,18 @@ class Enemy:
     y: int
 
 
+@dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class Player:
     enemy_block_kills: int
-    game_ended_at: datetime
+    game_ended_at: datetime = field(metadata=datetime_metadata)
     gold: int
     name: str
     points: int
     zombie_kills: int
 
 
+@dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class Zombie:
     attack: int
@@ -53,6 +59,7 @@ class Zombie:
     y: int
 
 
+@dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class Units:
     base: List[Base]
