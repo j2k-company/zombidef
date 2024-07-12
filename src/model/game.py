@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 from dataclasses_json import LetterCase, dataclass_json
 
@@ -13,9 +13,9 @@ class Round:
     duration: int
     end_at: datetime = field(metadata=datetime_metadata)
     name: str
-    repeat: str
     start_at: datetime = field(metadata=datetime_metadata)
     status: str
+    repeat: Optional[int] = None
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
