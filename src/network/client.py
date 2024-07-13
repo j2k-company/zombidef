@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from urllib.parse import urljoin
 from requests import HTTPError, JSONDecodeError, Response, Session
 
@@ -11,8 +12,32 @@ from src.model.world import World
 TEST_BASE_URL = "https://games-test.datsteam.dev/"
 BASE_URL = "https://games.datsteam.dev/"
 
+class BaseClient(ABC):
+    @abstractmethod
+    def send_command(self, command: Command) -> tuple[Command, str]:
+        """send commands for next turn"""
 
-class Client():
+    @abstractmethod
+    def participate(self) -> int:
+        """send request for participate in next round"""
+
+    @abstractmethod
+    def get_units(self) -> Units:
+        """
+        get info world parts around player that are changing during the game
+        (zombies, players, current player, etc...)
+        """
+
+    @abstractmethod
+    def research_world(self) -> World:
+        """get info world parts around player that are not changing during the game(zombie zpots)"""
+
+    @abstractmethod
+    def get_rounds(self) -> Game:
+        """get info about actual game"""
+
+
+class Client(BaseClient):
     """main client for interacting with server"""
 
     def __init__(self, token: str, test: bool = False):
@@ -24,6 +49,7 @@ class Client():
         })
 
     def check_for_errors(self, response: Response):
+        """check for errors in response and raise it"""
         try:
             response.raise_for_status()
         except HTTPError as e:
@@ -31,7 +57,6 @@ class Client():
                 data = response.json()
                 error_code = data["errCode"]
                 error_message = data["error"]
-                print(error_code, error_code == 23)
 
                 if error_code == 23:
                     raise RealmNotFoundError(error_code, error_message) from e
