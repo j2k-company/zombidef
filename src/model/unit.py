@@ -27,11 +27,11 @@ class Base:
 class Enemy:
     attack: int
     health: int
-    is_head: Optional[bool] = False
     last_attack: Coordinate
     name: str
     x: int
     y: int
+    is_head: Optional[bool] = False
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
@@ -62,10 +62,10 @@ class Zombie:
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class Units:
-    base: Optional[List[Base]] = None
     enemy_blocks: Optional[List[Enemy]]
     player: Player
     realm_name: str
     turn: int
     turn_ends_in_ms: int
     zombies: Optional[List[Zombie]]
+    base: Optional[List[Base]] = None
