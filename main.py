@@ -20,7 +20,7 @@ class App:
         self.clock = Clock()
         self.events = None
         self.client = Client(Settings().token, test=True)
-        # self.game = Game(self)
+        # self.game_state = Game(self)
         self.game_state = LobbyMenu(self)
 
     def change_state(self):
