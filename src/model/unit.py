@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 from dataclasses_json import LetterCase, dataclass_json
 
@@ -27,7 +27,7 @@ class Base:
 class Enemy:
     attack: int
     health: int
-    is_head: bool
+    is_head: Optional[bool] = False
     last_attack: Coordinate
     name: str
     x: int
@@ -62,10 +62,10 @@ class Zombie:
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class Units:
-    base: List[Base]
-    enemy_blocks: List[Enemy]
+    base: Optional[List[Base]] = None
+    enemy_blocks: Optional[List[Enemy]]
     player: Player
     realm_name: str
     turn: int
     turn_ends_in_ms: int
-    zombies: List[Zombie]
+    zombies: Optional[List[Zombie]]
