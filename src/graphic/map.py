@@ -1,5 +1,5 @@
 from src.config import Tiles, z_to_color
-from src.model.unit import Units
+from src.model.unit import Units, Base
 from src.model.world import CellType
 
 
@@ -30,7 +30,7 @@ class Map:
                 self.map[unit.y][unit.x] = Tiles.enemy_main_base if unit.is_head else Tiles.enemy_base
         if units.zombies:
             for unit in units.zombies:
-                self.map.enemies.append(z_to_color(unit))
+                self.enemies.append(z_to_color(unit))
 
     def get_block(self, x, y):
         match self.map[y][x]:
@@ -43,7 +43,7 @@ class Map:
                     if i.x == x and i.y == y:
                         return i
 
-    def get_main_base(self):
+    def get_main_base(self) -> Base:
         for u in self.real_map.base:
             if u.is_head:
                 return u

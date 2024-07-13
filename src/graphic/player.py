@@ -1,5 +1,5 @@
 from enum import Enum
-from math import sqrt
+from math import sqrt, ceil
 
 from pygame import K_1, K_2, K_3, K_4
 from pygame.mouse import get_pos
@@ -29,7 +29,9 @@ class Player:
         global_position = (offset_x + mouse_position[0] % 32, offset_y + mouse_position[1] % 32)
         match button:
             case Motion.build.value:
-                self.get_command_buffer().build.append(Coordinate(global_position[0], global_position[1]))
+                main_base = self.game_map.get_main_base()
+                self.get_command_buffer().build.append(
+                    Coordinate(global_position[0] - main_base.x, global_position[1] - main_base.y))
             case Motion.attack.value:
                 if self.attacking_block:
                     self.get_command_buffer().attack.append(
@@ -55,7 +57,7 @@ class Player:
                     dist = 8
                 else:
                     dist = 5
-                zombies = filter(lambda z: dist <= sqrt(abs(b.x - z.x) ^ 2 + abs(b.y - z.y) ^ 2),
+                zombies = filter(lambda z: dist <= ceil(sqrt(abs(b.x - z.x) ^ 2 + abs(b.y - z.y) ^ 2)),
                                  self.game_map.real_map.zombies)
                 zombies = sorted(zombies, key=lambda z: sqrt(abs(b.x - z.x) ^ 2 + abs(b.y - z.y) ^ 2))
                 if len(zombies) > 0:
