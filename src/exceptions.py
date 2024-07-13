@@ -12,3 +12,9 @@ class UnknownZombieDefError(Exception):
 
 class RealmNotFoundError(ZombieDefError):
     ...
+
+class RegistrationEndedError(ZombieDefError):
+    ...
+
+class AlreadyRegistredError(ZombieDefError):
+    ...
