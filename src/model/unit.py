@@ -10,39 +10,39 @@ from src.model.base import Coordinate, datetime_metadata
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class Base:
-    attack: int
-    health: int
-    id: str
-    last_attack: Coordinate
-    x: int
-    y: int
-    range: int
-    x: int
-    y: int
-    is_head: Optional[bool] = False
+    attack: Optional[int] = None
+    health: Optional[int] = None
+    id: Optional[str] = None
+    last_attack: Optional[Coordinate] = None
+    x: Optional[int] = None
+    y: Optional[int] = None
+    range: int = 0
+    x: Optional[int] = None
+    y: Optional[int] = None
+    is_head: bool = False
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class Enemy:
-    attack: int
-    health: int
-    last_attack: Coordinate
-    name: str
-    x: int
-    y: int
-    is_head: Optional[bool] = False
+    attack: Optional[int] = None
+    health: Optional[int] = None
+    last_attack: Optional[Coordinate] = None
+    name: Optional[str] = None
+    x: Optional[int] = None
+    y: Optional[int] = None
+    is_head: bool = False
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class Player:
-    enemy_block_kills: int
     game_ended_at: datetime = field(metadata=datetime_metadata)
     gold: int
-    name: str
-    points: int
-    zombie_kills: int
+    name: Optional[str] = None
+    enemy_block_kills: int = 0
+    points: int = 0
+    zombie_kills: int = 0
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
@@ -62,10 +62,10 @@ class Zombie:
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class Units:
-    enemy_blocks: Optional[List[Enemy]]
     player: Player
     realm_name: str
     turn: int
     turn_ends_in_ms: int
-    zombies: Optional[List[Zombie]]
-    base: Optional[List[Base]] = None
+    enemy_blocks: Optional[List[Enemy]] = tuple()
+    zombies: Optional[List[Zombie]] = tuple()
+    base: Optional[List[Base]] = tuple()
