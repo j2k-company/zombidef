@@ -1,7 +1,7 @@
 import datetime
 
 from src.config import my_font
-from src.exceptions import RealmNotFoundError
+from src.exceptions import RealmNotFoundError, RegistrationEndedError, PlayerNotParticipatingInRound
 
 
 class LobbyMenu:
@@ -9,12 +9,19 @@ class LobbyMenu:
         self.app = app
         self.last_time = datetime.datetime.now()
         self.start_time = None
+        self.message = ''
 
     def check_time(self):
         try:
             self.start_time = datetime.timedelta(seconds=self.app.client.participate()) + datetime.datetime.now()
         except RealmNotFoundError:
             self.start_time = None
+            self.message = 'Ждем-с'
+        except PlayerNotParticipatingInRound:
+            self.start_time = None
+            self.message = 'Ну че, мы не успели('
+        except RegistrationEndedError:
+            self.app.change_state()
 
     def update(self):
         if self.start_time:
@@ -29,7 +36,7 @@ class LobbyMenu:
             text_surface = my_font.render(f'Время до старта: {self.start_time - datetime.datetime.now()}', False,
                                           (255, 255, 255))
         else:
-            text_surface = my_font.render('Чет сломалось(', False, (255, 255, 255))
+            text_surface = my_font.render(self.message, False, (255, 255, 255))
         self.app.screen.blit(text_surface, (0, 0))
 
     def run(self):

@@ -1,11 +1,11 @@
 import datetime
 
-from pygame import KEYDOWN
+from pygame import KEYDOWN, K_e
 
 from .camera import Camera
 from .map import Map
 from .player import Player
-from ..config import CAMERA_CONTROL, my_font
+from ..config import CAMERA_CONTROL, my_font, PLAYER_CONTROL
 
 
 class Game:
@@ -30,7 +30,10 @@ class Game:
         for event in self.app.events:
             if event.type == KEYDOWN:
                 if event.key in CAMERA_CONTROL:
-                    self.camera.keyboard_control(event.key, self.map.max_dist)
+                    if event.key != K_e:
+                        self.camera.keyboard_control(event.key, self.map.max_dist)
+                    else:
+                        self.camera.keyboard_control(event.key, self.map.max_dist, self.map.get_main_base())
                 if event.key in PLAYER_CONTROL:
                     self.player.keyboard_control(event.key, self.camera.offset_x, self.camera.offset_y)
 
