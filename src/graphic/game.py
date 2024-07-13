@@ -6,6 +6,7 @@ from .camera import Camera
 from .map import Map
 from .player import Player
 from ..config import CAMERA_CONTROL, my_font, PLAYER_CONTROL
+from ..exceptions import RegistrationEndedError, RealmNotFoundError
 
 
 class Game:
@@ -39,11 +40,19 @@ class Game:
                 if event.key in PLAYER_CONTROL:
                     self.player.keyboard_control(event.key, self.camera.offset_x, self.camera.offset_y)
 
-        if self.lose:
-            return
-
         if (datetime.datetime.now() - self.last_motion).seconds >= 2:
             self.last_motion = datetime.datetime.now()
+            if self.lose:
+                try:
+                    self.app.client.participate()
+                except RegistrationEndedError:
+                    pass
+                except RealmNotFoundError:
+                    self.app.change_state()
+                else:
+                    self.app.change_state()
+                return
+
             self.player.update()
             if self.player.command_buffer:
                 self.app.client.send_command(self.player.command_buffer)

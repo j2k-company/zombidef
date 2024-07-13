@@ -22,10 +22,10 @@ class Map:
     def update_map(self, units: Units):
         self.real_map = units
         for unit in units.base:
-            self.map[unit.y][unit.x] = real_to_color(unit)
+            self.map[unit.y][unit.x] = Tiles.main_base if unit.is_head else Tiles.base
         if units.enemy_blocks:
             for unit in units.enemy_blocks:
-                self.map[unit.y][unit.x] = real_to_color(unit)
+                self.map[unit.y][unit.x] = Tiles.enemy_main_base if unit.is_head else Tiles.enemy_base
 
     def get_block(self, x, y):
         match self.map[y][x]:
