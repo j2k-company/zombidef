@@ -33,7 +33,9 @@ class Game:
                     if event.key != K_e:
                         self.camera.keyboard_control(event.key, self.map.max_dist)
                     else:
-                        self.camera.keyboard_control(event.key, self.map.max_dist, self.map.get_main_base())
+                        if self.map.real_map.base is not None:
+
+                            self.camera.keyboard_control(event.key, self.map.max_dist, self.map.get_main_base())
                 if event.key in PLAYER_CONTROL:
                     self.player.keyboard_control(event.key, self.camera.offset_x, self.camera.offset_y)
 
@@ -42,6 +44,7 @@ class Game:
 
         if (datetime.datetime.now() - self.last_motion).seconds >= 2:
             self.last_motion = datetime.datetime.now()
+            self.player.update()
             if self.player.command_buffer:
                 self.app.client.send_command(self.player.command_buffer)
             self.update_world()

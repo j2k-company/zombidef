@@ -10,7 +10,7 @@ class Map:
         self.max_dist = 0
 
     def create_map(self, zpots):
-        self.max_dist = max(max(zpots, key=lambda x: x.x).x, max(zpots, key=lambda x: x.y).y) + 16
+        self.max_dist = max(max(zpots, key=lambda x: x.x).x, max(zpots, key=lambda x: x.y).y) + 32
         self.map = [[Tiles.void for _ in range(self.max_dist)] for _ in range(self.max_dist)]
         for zpot in zpots:
             match zpot.type:
@@ -39,7 +39,6 @@ class Map:
                         return i
 
     def get_main_base(self):
-        for u in self.real_map:
-            if u is Base:
-                if u.is_head:
-                    return u
+        for u in self.real_map.base:
+            if u.is_head:
+                return u

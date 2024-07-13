@@ -11,7 +11,7 @@ my_font = pygame.font.SysFont('Comic Sans MS', 30)
 SCREEN_WIDTH = 512
 SCREEN_HEIGHT = 512
 
-TILE = 32
+TILE = 16
 FPS = 60
 
 CAMERA_CONTROL = [K_UP, K_LEFT, K_DOWN, K_RIGHT, K_e]
