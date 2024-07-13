@@ -55,7 +55,8 @@ class Game:
 
             self.player.update()
             if self.player.command_buffer:
-                self.app.client.send_command(self.player.command_buffer)
+                response = self.app.client.send_command(self.player.command_buffer)
+                self.player.read_response(response)
             self.update_world()
 
     def draw(self):

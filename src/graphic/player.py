@@ -1,3 +1,4 @@
+import random
 from enum import Enum
 from math import sqrt, ceil
 
@@ -8,7 +9,21 @@ from src.config import TILE
 from src.graphic.map import Map
 from src.model.base import Coordinate
 from src.model.command import Command, AttackCommand
-from src.model.unit import Base
+from src.model.unit import Base, Player
+
+
+def check_bound(tile: Base, game_map):
+    clear_cell_around = [(tile.x + 1, tile.y), (tile.x - 1, tile.y), (tile.x, tile.y + 1), (tile.x, tile.y - 1)]
+    for b in game_map:
+        if tile.x - b.x == 1:
+            clear_cell_around.pop(clear_cell_around.index((tile.x - 1, tile.y)))
+        if tile.x - b.x == -1:
+            clear_cell_around.pop(clear_cell_around.index((tile.x + 1, tile.y)))
+        if tile.y - b.y == 1:
+            clear_cell_around.pop(clear_cell_around.index((tile.x, tile.y - 1)))
+        if tile.x - b.x == -1:
+            clear_cell_around.pop(clear_cell_around.index((tile.x, tile.y + 1)))
+    return clear_cell_around
 
 
 class Motion(Enum):
@@ -23,6 +38,7 @@ class Player:
         self.game_map = game_map
         self.command_buffer = None
         self.attacking_block: Base = None
+        self.player = None
 
     def keyboard_control(self, button: int, offset_x, offset_y):
         mouse_position = get_pos()
@@ -31,7 +47,7 @@ class Player:
             case Motion.build.value:
                 main_base = self.game_map.get_main_base()
                 self.get_command_buffer().build.append(
-                    Coordinate(global_position[0] - main_base.x, global_position[1] - main_base.y))
+                    Coordinate(global_position[0], global_position[1]))
             case Motion.attack.value:
                 if self.attacking_block:
                     self.get_command_buffer().attack.append(
@@ -42,6 +58,9 @@ class Player:
                 self.get_command_buffer().move_base = Coordinate(global_position[0], global_position[1])
             case Motion.clear_buffer.value:
                 self.command_buffer = None
+
+    def update_player(self, pl: Player):
+        self.player = pl
 
     def get_command_buffer(self):
         if self.command_buffer is None:
@@ -57,8 +76,15 @@ class Player:
                     dist = 8
                 else:
                     dist = 5
-                zombies = filter(lambda z: dist <= ceil(sqrt(abs(b.x - z.x) ^ 2 + abs(b.y - z.y) ^ 2)),
+                zombies = filter(lambda z: dist >= ceil(sqrt(abs(b.x - z.x) ^ 2 + abs(b.y - z.y) ^ 2)),
                                  self.game_map.real_map.zombies)
                 zombies = sorted(zombies, key=lambda z: sqrt(abs(b.x - z.x) ^ 2 + abs(b.y - z.y) ^ 2))
                 if len(zombies) > 0:
                     self.get_command_buffer().attack.append(AttackCommand(b.id, Coordinate(zombies[0].x, zombies[0].y)))
+        if self.player.gold > 0:
+            clear_cell = set()
+            for b in self.game_map.real_map.base:
+                clear_cell = clear_cell.add(*check_bound(b, self.game_map.real_map.base))
+            cell = random.choices(list(clear_cell), self.player.gold // 2)
+            for i in cell:
+                self.get_command_buffer().build.append(Coordinate(i.x, i.y))

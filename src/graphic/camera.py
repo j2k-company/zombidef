@@ -37,6 +37,9 @@ class Camera:
                 self.offset_x = main_base.x
                 self.offset_y = main_base.y
 
+    def read_response(self, response: dict):
+        ...
+
     def custom_draw(self, sc, game_map):
         for y in range(self.offset_y, self.offset_y + 32):
             for x in range(self.offset_x, self.offset_x + 32):
@@ -49,4 +52,4 @@ class Camera:
             if i.x in range(self.offset_y, self.offset_y + 32) and i.y in range(self.offset_y, self.offset_y + 32):
                 relative_x = (i.x - self.offset_x) * TILE
                 relative_y = (i.y - self.offset_y) * TILE
-                rect(sc, i.color, (relative_x, relative_y, relative_x + TILE * 0.8, relative_y + TILE * 0.8))
+                rect(sc, i.color, (relative_x, relative_y, relative_x + TILE * 0.5, relative_y + TILE * 0.5))
