@@ -2,7 +2,10 @@ from abc import ABC, abstractmethod
 from urllib.parse import urljoin
 from requests import HTTPError, JSONDecodeError, Response, Session
 
-from src.exceptions import ZombieDefError, UnknownZombieDefError, RealmNotFoundError
+from src.exceptions import (
+    ZombieDefError, UnknownZombieDefError, RealmNotFoundError, RegistrationEndedError,
+    AlreadyRegistredError
+)
 from src.model.command import Command
 from src.model.game import Game
 from src.model.unit import Units
@@ -60,6 +63,10 @@ class Client(BaseClient):
 
                 if error_code == 23:
                     raise RealmNotFoundError(error_code, error_message) from e
+                if error_code == 1001:
+                    raise RegistrationEndedError(error_code, error_message) from e
+                if error_code == 1002:
+                    raise AlreadyRegistredError(error_code, error_message) from e
                 raise ZombieDefError(error_code, error_message) from e
 
             except (KeyError, JSONDecodeError) as ue:
