@@ -1,6 +1,7 @@
 from urllib.parse import urljoin
-from requests import Response, Session
+from requests import HTTPError, JSONDecodeError, Response, Session
 
+from src.exceptions import ZombieDefError, UnknownZombieDefError, RealmNotFoundError
 from src.model.command import Command
 from src.model.game import Game
 from src.model.unit import Units
@@ -22,11 +23,28 @@ class Client():
             "Content-type" : "application/json"
         })
 
+    def check_for_errors(self, response: Response):
+        try:
+            response.raise_for_status()
+        except HTTPError as e:
+            try:
+                data = response.json()
+                error_code = data["errCode"]
+                error_message = data["error"]
+                print(error_code, error_code == 23)
+
+                if error_code == 23:
+                    raise RealmNotFoundError(error_code, error_message) from e
+                raise ZombieDefError(error_code, error_message) from e
+
+            except (KeyError, JSONDecodeError) as ue:
+                raise UnknownZombieDefError() from ue
+
     def safe_get(self, endpoint: str) -> Response:
         """safety send get requests to server"""
 
         response = self._session.get(urljoin(self.base_url, endpoint))
-        response.raise_for_status()
+        self.check_for_errors(response)
 
         return response
 
@@ -34,7 +52,7 @@ class Client():
         """safety send post requests to server"""
 
         response = self._session.post(urljoin(self.base_url, endpoint), data=data)
-        response.raise_for_status()
+        self.check_for_errors(response)
 
         return response
 
@@ -42,7 +60,7 @@ class Client():
         """safety send get requests to server"""
 
         response = self._session.put(urljoin(self.base_url, endpoint))
-        response.raise_for_status()
+        self.check_for_errors(response)
 
         return response
 
@@ -58,16 +76,16 @@ class Client():
         )
 
     def participate(self) -> int:
-        return self.safe_put("/play/zombidef/participate/").json()["startsInSec"]
+        return self.safe_put("/play/zombidef/participate").json()["startsInSec"]
 
     def get_units(self) -> Units:
-        response = self.safe_get("/play/zombidef/units/")
+        response = self.safe_get("/play/zombidef/units")
         return Units.from_json(response.text)
 
     def research_world(self) -> World:
-        response = self.safe_get("/play/zombidef/world/")
+        response = self.safe_get("/play/zombidef/world")
         return World.from_json(response.text)
 
     def get_rounds(self) -> Game:
-        response = self.safe_get("/rounds/zombidef/")
+        response = self.safe_get("/rounds/zombidef")
         return Game.from_json(response.text)
