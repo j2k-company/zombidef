@@ -1,2 +1,5 @@
-class Game:
+from gym import Env
+
+
+class Game(Env):
     ...

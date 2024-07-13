@@ -1,7 +1,7 @@
 from enum import Enum
 
 from pygame.draw import rect
-from pygame import K_UP, K_LEFT, K_DOWN, K_RIGHT
+from pygame import K_UP, K_LEFT, K_DOWN, K_RIGHT, K_e
 
 from src.config import TILE
 
@@ -11,6 +11,7 @@ class Direction(Enum):
     down = K_DOWN
     left = K_LEFT
     right = K_RIGHT
+    go_to_base = K_e
 
 
 class Camera:
@@ -18,7 +19,7 @@ class Camera:
         self.offset_x = 0
         self.offset_y = 0
 
-    def keyboard_control(self, button: int, max_dist):
+    def keyboard_control(self, button: int, max_dist, main_base=None):
         match button:
             case Direction.up.value:
                 if self.offset_y > 0:
@@ -32,6 +33,9 @@ class Camera:
             case Direction.right.value:
                 if self.offset_x + 16 < max_dist:
                     self.offset_x += 1
+            case Direction.go_to_base.value:
+                self.offset_x = main_base.x
+                self.offset_y = main_base.y
 
     def custom_draw(self, sc, game_map):
         for y in range(self.offset_y, self.offset_y + 16):

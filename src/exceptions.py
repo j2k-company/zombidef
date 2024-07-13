@@ -13,11 +13,18 @@ class UnknownZombieDefError(Exception):
 class RealmNotFoundError(ZombieDefError):
     ...
 
+
 class RegistrationEndedError(ZombieDefError):
     ...
+
 
 class GameNotStartedError(ZombieDefError):
     ...
 
-class MethodNotFoundError(ZombieDefError): # 1
+
+class PlayerNotParticipatingInRound(ZombieDefError):
+    ...
+
+
+class MethodNotFoundError(ZombieDefError):  # 1
     ...

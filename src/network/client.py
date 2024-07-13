@@ -5,7 +5,7 @@ from requests import HTTPError, JSONDecodeError, Response, Session
 
 from src.exceptions import (
     ZombieDefError, UnknownZombieDefError, RealmNotFoundError, RegistrationEndedError,
-    GameNotStartedError
+    GameNotStartedError, PlayerNotParticipatingInRound
 )
 from src.model.command import Command
 from src.model.game import Game
@@ -68,6 +68,8 @@ class Client(BaseClient):
                     raise RegistrationEndedError(error_code, error_message) from e
                 if error_code == 1002:
                     raise GameNotStartedError(error_code, error_message) from e
+                if error_code == 28:
+                    raise PlayerNotParticipatingInRound(error_code, error_message) from e
                 raise ZombieDefError(error_code, error_message) from e
 
             except (KeyError, JSONDecodeError) as ue:

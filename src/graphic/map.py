@@ -1,5 +1,5 @@
 from src.config import Tiles, real_to_color
-from src.model.unit import Units
+from src.model.unit import Units, Base
 from src.model.world import CellType
 
 
@@ -23,8 +23,9 @@ class Map:
         self.real_map = units
         for unit in units.base:
             self.map[unit.y][unit.x] = real_to_color(unit)
-        for unit in units.enemy_blocks:
-            self.map[unit.y][unit.x] = real_to_color(unit)
+        if units.enemy_blocks:
+            for unit in units.enemy_blocks:
+                self.map[unit.y][unit.x] = real_to_color(unit)
 
     def get_block(self, x, y):
         match self.map[y][x]:
@@ -36,3 +37,9 @@ class Map:
                 for i in self.real_map.enemy_blocks:
                     if i.x == x and i.y == y:
                         return i
+
+    def get_main_base(self):
+        for u in self.real_map:
+            if u is Base:
+                if u.is_head:
+                    return u
