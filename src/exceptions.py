@@ -16,5 +16,8 @@ class RealmNotFoundError(ZombieDefError):
 class RegistrationEndedError(ZombieDefError):
     ...
 
-class AlreadyRegistredError(ZombieDefError):
+class GameNotStartedError(ZombieDefError):
+    ...
+
+class MethodNotFoundError(ZombieDefError): # 1
     ...

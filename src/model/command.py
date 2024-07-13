@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 from dataclasses_json import LetterCase, dataclass_json
 
@@ -18,4 +18,4 @@ class AttackCommand:
 class Command:
     attack: List[AttackCommand]
     build: List[Coordinate]
-    move_base: Coordinate
+    move_base: Optional[Coordinate] = None

@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
+import json
 from urllib.parse import urljoin
 from requests import HTTPError, JSONDecodeError, Response, Session
 
 from src.exceptions import (
     ZombieDefError, UnknownZombieDefError, RealmNotFoundError, RegistrationEndedError,
-    AlreadyRegistredError
+    GameNotStartedError
 )
 from src.model.command import Command
 from src.model.game import Game
@@ -66,7 +67,7 @@ class Client(BaseClient):
                 if error_code == 1001:
                     raise RegistrationEndedError(error_code, error_message) from e
                 if error_code == 1002:
-                    raise AlreadyRegistredError(error_code, error_message) from e
+                    raise GameNotStartedError(error_code, error_message) from e
                 raise ZombieDefError(error_code, error_message) from e
 
             except (KeyError, JSONDecodeError) as ue:
@@ -98,12 +99,13 @@ class Client(BaseClient):
 
     def send_command(self, command: Command) -> tuple[Command, str]:
         response = self.safe_post(
-            "/play/zombidef/command/",
-            command.to_request()
+            "/play/zombidef/command",
+            command.to_json()
         ).json()
 
+        print(response)
         return (
-            Command.from_json(str(response["acceptedCommands"])),
+            Command.from_json(json.dumps(response["acceptedCommands"])),
             response["errors"]
         )
 

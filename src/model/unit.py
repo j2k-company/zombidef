@@ -13,13 +13,13 @@ class Base:
     attack: int
     health: int
     id: str
-    is_head: bool
     last_attack: Coordinate
     x: int
     y: int
     range: int
     x: int
     y: int
+    is_head: Optional[bool] = False
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
