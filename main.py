@@ -4,11 +4,12 @@ from pygame.event import get
 from pygame.time import Clock
 
 from src.config import Settings, SCREEN_WIDTH, SCREEN_HEIGHT, FPS
+from src.graphic.UI.lobby_manu import LobbyMenu
 from src.graphic.game import Game
+from src.network.client import Client
 
 
 def main():
-    print(Settings())
     app = App()
     app.run()
 
@@ -18,7 +19,15 @@ class App:
         self.screen = set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = Clock()
         self.events = None
-        self.game = Game(self)
+        self.client = Client(Settings().token, test=True)
+        # self.game = Game(self)
+        self.game_state = LobbyMenu(self)
+
+    def change_state(self):
+        if isinstance(self.game_state, LobbyMenu):
+            self.game_state = Game(self)
+        elif isinstance(self.game_state, Game):
+            self.game_state = LobbyMenu(self)
 
     def run(self):
         while True:
@@ -29,7 +38,7 @@ class App:
 
             self.screen.fill((0, 0, 0))
 
-            self.game.run()
+            self.game_state.run()
 
             self.clock.tick(FPS)
             set_caption(f"FPS: {self.clock.get_fps() :.2f}")
