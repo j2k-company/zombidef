@@ -7,10 +7,11 @@ class Map:
     def __init__(self):
         self.map = None
         self.real_map = None
+        self.max_dist = 0
 
     def create_map(self, zpots):
-        max_dist = max(max(zpots, key=lambda x: x.x).x, max(zpots, key=lambda x: x.y).y) + 16
-        self.map = [[Tiles.void for _ in range(max_dist)] for _ in range(max_dist)]
+        self.max_dist = max(max(zpots, key=lambda x: x.x).x, max(zpots, key=lambda x: x.y).y) + 16
+        self.map = [[Tiles.void for _ in range(self.max_dist)] for _ in range(self.max_dist)]
         for zpot in zpots:
             match zpot.type:
                 case CellType.WALL.value:

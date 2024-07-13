@@ -1,7 +1,7 @@
 import pygame
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from enum import Enum
-from pygame import K_UP, K_LEFT, K_DOWN, K_RIGHT
+from pygame import K_UP, K_LEFT, K_DOWN, K_RIGHT, K_1, K_2, K_3, K_4
 
 from src.model.unit import Base, Enemy
 
@@ -15,6 +15,7 @@ TILE = 32
 FPS = 60
 
 CAMERA_CONTROL = [K_UP, K_LEFT, K_DOWN, K_RIGHT]
+PLAYER_CONTROL = [K_1, K_2, K_3, K_4]
 
 
 def real_to_color(real_cell):

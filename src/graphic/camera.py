@@ -18,18 +18,20 @@ class Camera:
         self.offset_x = 0
         self.offset_y = 0
 
-    def keyboard_control(self, button: int):
+    def keyboard_control(self, button: int, max_dist):
         match button:
             case Direction.up.value:
                 if self.offset_y > 0:
                     self.offset_y -= 1
             case Direction.down.value:
-                self.offset_y += 1
+                if self.offset_y + 16 < max_dist:
+                    self.offset_y += 1
             case Direction.left.value:
                 if self.offset_x > 0:
                     self.offset_x -= 1
             case Direction.right.value:
-                self.offset_x += 1
+                if self.offset_x + 16 < max_dist:
+                    self.offset_x += 1
 
     def custom_draw(self, sc, game_map):
         for y in range(self.offset_y, self.offset_y + 16):
