@@ -42,6 +42,11 @@ class Camera:
             for x in range(self.offset_x, self.offset_x + 32):
                 relative_x = (x - self.offset_x) * TILE
                 relative_y = (y - self.offset_y) * TILE
-                if game_map[y][x] is None:
-                    game_map[y][x] = Tiles.void
-                rect(sc, game_map[y][x].value, (relative_x, relative_y, relative_x + TILE, relative_y + TILE))
+                if game_map.map[y][x] is None:
+                    game_map.map[y][x] = Tiles.void
+                rect(sc, game_map.map[y][x].value, (relative_x, relative_y, relative_x + TILE, relative_y + TILE))
+        for i in game_map.enemies:
+            if i.x in range(self.offset_y, self.offset_y + 32) and i.y in range(self.offset_y, self.offset_y + 32):
+                relative_x = (i.x - self.offset_x) * TILE
+                relative_y = (i.y - self.offset_y) * TILE
+                rect(sc, i.color, (relative_x, relative_y, relative_x + TILE * 0.8, relative_y + TILE * 0.8))

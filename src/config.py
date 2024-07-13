@@ -1,9 +1,11 @@
+from dataclasses import dataclass
+
 import pygame
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from enum import Enum
 from pygame import K_UP, K_LEFT, K_DOWN, K_RIGHT, K_1, K_2, K_3, K_4, K_e
 
-from src.model.unit import Base, Enemy
+from src.model.unit import Zombie
 
 pygame.font.init()
 my_font = pygame.font.SysFont('Comic Sans MS', 30)
@@ -18,17 +20,36 @@ CAMERA_CONTROL = [K_UP, K_LEFT, K_DOWN, K_RIGHT, K_e]
 PLAYER_CONTROL = [K_1, K_2, K_3, K_4]
 
 
-def real_to_color(real_cell):
-    if real_cell is Base:
-        if real_cell.is_head:
-            return Tiles.main_base
-        else:
-            return Tiles.base
-    elif real_cell is Enemy:
-        if real_cell.is_head:
-            return Tiles.enemy_main_base
-        else:
-            return Tiles.enemy_base
+@dataclass
+class ZombieColor:
+    attack: int
+    direction: str
+    health: int
+    id: str
+    speed: int
+    color: tuple
+    type: str
+    wait_turns: int
+    x: int
+    y: int
+
+
+def z_to_color(z: Zombie):
+    if z.type == 'normal':
+        return ZombieColor(z.attack, z.direction, z.health, z.id, z.speed, (0, 255, 0), z.type, z.wait_turns, z.x, z.y)
+    elif z.type == 'fast':
+        return ZombieColor(z.attack, z.direction, z.health, z.id, z.speed, (0, 0, 255), z.type, z.wait_turns, z.x, z.y)
+    elif z.type == 'bomber':
+        return ZombieColor(z.attack, z.direction, z.health, z.id, z.speed, (80, 80, 80), z.type, z.wait_turns, z.x, z.y)
+    elif z.type == 'liner':
+        return ZombieColor(z.attack, z.direction, z.health, z.id, z.speed, (80, 255, 255), z.type, z.wait_turns, z.x,
+                           z.y)
+    elif z.type == 'juggernaut':
+        return ZombieColor(z.attack, z.direction, z.health, z.id, z.speed, (255, 255, 80), z.type, z.wait_turns, z.x,
+                           z.y)
+    elif z.type == 'chaos_knight':
+        return ZombieColor(z.attack, z.direction, z.health, z.id, z.speed, (255, 80, 255), z.type, z.wait_turns, z.x,
+                           z.y)
 
 
 class Tiles(Enum):

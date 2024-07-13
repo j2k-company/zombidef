@@ -49,13 +49,14 @@ class Player:
     def update(self):
         if self.game_map.real_map is None:
             return
-        for b in self.game_map.real_map.base:
-            if b.is_head:
-                dist = 8
-            else:
-                dist = 5
-            zombies = filter(lambda z: dist <= sqrt(abs(b.x - z.x) ^ 2 + abs(b.y - z.y) ^ 2),
-                             self.game_map.real_map.zombies)
-            zombies = sorted(zombies, key=lambda z: sqrt(abs(b.x - z.x) ^ 2 + abs(b.y - z.y) ^ 2))
-            if len(zombies) > 0:
-                self.get_command_buffer().attack.append(AttackCommand(b.id, Coordinate(zombies[0].x, zombies[0].y)))
+        if self.game_map.real_map.zombies:
+            for b in self.game_map.real_map.base:
+                if b.is_head:
+                    dist = 8
+                else:
+                    dist = 5
+                zombies = filter(lambda z: dist <= sqrt(abs(b.x - z.x) ^ 2 + abs(b.y - z.y) ^ 2),
+                                 self.game_map.real_map.zombies)
+                zombies = sorted(zombies, key=lambda z: sqrt(abs(b.x - z.x) ^ 2 + abs(b.y - z.y) ^ 2))
+                if len(zombies) > 0:
+                    self.get_command_buffer().attack.append(AttackCommand(b.id, Coordinate(zombies[0].x, zombies[0].y)))

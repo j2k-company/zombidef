@@ -1,5 +1,5 @@
-from src.config import Tiles, real_to_color
-from src.model.unit import Units, Base
+from src.config import Tiles, z_to_color
+from src.model.unit import Units
 from src.model.world import CellType
 
 
@@ -8,6 +8,7 @@ class Map:
         self.map = None
         self.real_map = None
         self.max_dist = 0
+        self.enemies = []
 
     def create_map(self, zpots):
         self.max_dist = max(max(zpots, key=lambda x: x.x).x, max(zpots, key=lambda x: x.y).y) + 32
@@ -21,11 +22,15 @@ class Map:
 
     def update_map(self, units: Units):
         self.real_map = units
+        self.enemies = []
         for unit in units.base:
             self.map[unit.y][unit.x] = Tiles.main_base if unit.is_head else Tiles.base
         if units.enemy_blocks:
             for unit in units.enemy_blocks:
                 self.map[unit.y][unit.x] = Tiles.enemy_main_base if unit.is_head else Tiles.enemy_base
+        if units.zombies:
+            for unit in units.zombies:
+                self.map.enemies.append(z_to_color(unit))
 
     def get_block(self, x, y):
         match self.map[y][x]:

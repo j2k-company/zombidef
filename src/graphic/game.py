@@ -59,7 +59,7 @@ class Game:
             self.update_world()
 
     def draw(self):
-        self.camera.custom_draw(self.app.screen, self.map.map)
+        self.camera.custom_draw(self.app.screen, self.map)
         if self.lose:
             text_surface = my_font.render('Мы слили(', False, (255, 50, 50))
             self.app.screen.blit(text_surface, (0, 0))
