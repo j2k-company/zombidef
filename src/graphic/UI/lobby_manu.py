@@ -18,9 +18,9 @@ class LobbyMenu:
 
     def update(self):
         if self.start_time:
-            if self.start_time >= datetime.datetime.now():
+            if datetime.datetime.now() >= self.start_time:
                 self.app.change_state()
-        if (datetime.datetime.now() - self.last_time).seconds > 0.5:
+        if (datetime.datetime.now() - self.last_time).seconds > 2:
             self.last_time = datetime.datetime.now()
             self.check_time()
 
