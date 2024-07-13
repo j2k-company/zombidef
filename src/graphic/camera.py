@@ -7,10 +7,10 @@ from src.config import TILE
 
 
 class Direction(Enum):
-    UP = K_UP
-    DOWN = K_DOWN
-    LEFT = K_LEFT
-    RIGHT = K_RIGHT
+    up = K_UP
+    down = K_DOWN
+    left = K_LEFT
+    right = K_RIGHT
 
 
 class Camera:
@@ -20,15 +20,15 @@ class Camera:
 
     def keyboard_control(self, button: int):
         match button:
-            case Direction.UP.value:
+            case Direction.up.value:
                 if self.offset_y > 0:
                     self.offset_y -= 1
-            case Direction.DOWN.value:
+            case Direction.down.value:
                 self.offset_y += 1
-            case Direction.LEFT.value:
+            case Direction.left.value:
                 if self.offset_x > 0:
                     self.offset_x -= 1
-            case Direction.RIGHT.value:
+            case Direction.right.value:
                 self.offset_x += 1
 
     def custom_draw(self, sc, game_map):
